@@ -1,5 +1,7 @@
 # Date Converter Chrome Extension
 
+![Date Converter Screenshot](screenshot.png)
+
 A simple Chrome extension that converts dates between multiple formats. Click any result to copy it to your clipboard.
 
 ## Features
