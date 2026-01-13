@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Date Converter",
+  "version": "1.1.6",
+  "description": "Convert dates between different formats",
+  "author": {
+    "name": "Mike Kennedy",
+    "email": "mikennedy@gmail.com",
+    "url": "michealkennedy.com"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Date Converter",
+    "default_icon": "date-16.png"
+  },
+  "icons": {
+    "16": "date-16.png",
+    "48": "date-48.png",
+    "128": "date-128.png"
+  },
+  "permissions": ["clipboardWrite", "storage"]
+}
