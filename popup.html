@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Date Converter</title>
     <link rel="stylesheet" href="popup.css">
 </head>
+
 <body>
     <div class="popup-container">
         <div class="header">
             <h2>Date Converter</h2>
             <button class="close-btn" id="closeBtn">&times;</button>
         </div>
-        
+
         <div class="input-section">
             <label for="dateInput">Enter date (any format):</label>
             <div class="input-wrapper">
                 <input type="text" id="dateInput" placeholder="1-22-2026, 1/22/2026, January 22, 2026..." />
                 <input type="date" id="datePickerInput" class="hidden-date-picker" />
                 <button type="button" id="calendarBtn" class="calendar-btn" title="Open date picker">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                         <line x1="16" y1="2" x2="16" y2="6"></line>
                         <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -29,7 +32,7 @@
             </div>
             <div class="error-message" id="errorMessage"></div>
         </div>
-        
+
         <div class="results-section">
             <div class="capitalize-section">
                 <label>
@@ -60,11 +63,20 @@
                         <td>Dash Format</td>
                         <td class="clickable-date" id="dashDate" title="Click to copy">-</td>
                     </tr>
+                    <tr>
+                        <td>Padded Dash</td>
+                        <td class="clickable-date" id="paddedDashDate" title="Click to copy">-</td>
+                    </tr>
+                    <tr>
+                        <td>Month Day</td>
+                        <td class="clickable-date" id="monthDayDate" title="Click to copy">-</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    
+
     <script src="popup.js"></script>
 </body>
+
 </html>

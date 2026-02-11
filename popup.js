@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const simpleDateCell = document.getElementById('simpleDate');
     const humanizeDateCell = document.getElementById('humanizeDate');
     const dashDateCell = document.getElementById('dashDate');
+    const paddedDashDateCell = document.getElementById('paddedDashDate');
+    const monthDayDateCell = document.getElementById('monthDayDate');
     const capitalizeCheckbox = document.getElementById('capitalizeCheckbox');
 
     // Close button functionality
@@ -235,11 +237,25 @@ document.addEventListener('DOMContentLoaded', function () {
         // Format Dash Date: M-D-YYYY
         const dashDate = `${month}-${day}-${year}`;
 
+        // Format Padded Dash Date: MM-DD-YYYY
+        const paddedMonth = String(month).padStart(2, '0');
+        const paddedDay = String(day).padStart(2, '0');
+        const paddedDashDate = `${paddedMonth}-${paddedDay}-${year}`;
+
+        // Format Month Day: March 4
+        let monthDayName = monthNames[date.getMonth()];
+        if (shouldCapitalize) {
+            monthDayName = monthDayName.toUpperCase();
+        }
+        const monthDay = `${monthDayName} ${day}`;
+
         return {
             monthDayYear: monthDayYear,
             simple: simpleDate,
             humanize: humanizeDate,
-            dash: dashDate
+            dash: dashDate,
+            paddedDash: paddedDashDate,
+            monthDay: monthDay
         };
     }
 
@@ -248,6 +264,8 @@ document.addEventListener('DOMContentLoaded', function () {
         simpleDateCell.textContent = dates.simple;
         humanizeDateCell.textContent = dates.humanize;
         dashDateCell.textContent = dates.dash;
+        paddedDashDateCell.textContent = dates.paddedDash;
+        monthDayDateCell.textContent = dates.monthDay;
         resultsTable.style.display = 'table';
 
         // Add click listeners for clipboard functionality
@@ -255,6 +273,8 @@ document.addEventListener('DOMContentLoaded', function () {
         addClickListener(simpleDateCell, dates.simple);
         addClickListener(humanizeDateCell, dates.humanize);
         addClickListener(dashDateCell, dates.dash);
+        addClickListener(paddedDashDateCell, dates.paddedDash);
+        addClickListener(monthDayDateCell, dates.monthDay);
     }
 
     function hideResults() {
@@ -263,6 +283,8 @@ document.addEventListener('DOMContentLoaded', function () {
         simpleDateCell.textContent = '-';
         humanizeDateCell.textContent = '-';
         dashDateCell.textContent = '-';
+        paddedDashDateCell.textContent = '-';
+        monthDayDateCell.textContent = '-';
     }
 
     function showError(message) {
