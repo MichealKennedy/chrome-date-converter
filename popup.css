@@ -128,12 +128,14 @@ body {
     padding: 0 20px 20px 20px;
 }
 
-.capitalize-section {
+.options-section {
     margin-bottom: 12px;
-    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
 }
 
-.capitalize-section label {
+.options-section label {
     display: flex;
     align-items: center;
     font-size: 14px;
@@ -141,7 +143,7 @@ body {
     cursor: pointer;
 }
 
-.capitalize-section input[type="checkbox"] {
+.options-section input[type="checkbox"] {
     margin-right: 8px;
     accent-color: #c4b5fd;
 }

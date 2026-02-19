@@ -12,6 +12,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const paddedDashDateCell = document.getElementById('paddedDashDate');
     const monthDayDateCell = document.getElementById('monthDayDate');
     const capitalizeCheckbox = document.getElementById('capitalizeCheckbox');
+    const abbrDaysCheckbox = document.getElementById('abbrDaysCheckbox');
+    const abbrMonthsCheckbox = document.getElementById('abbrMonthsCheckbox');
+
+    // Abbreviation maps
+    const abbreviatedMonths = {
+        'January': 'Jan.', 'February': 'Feb.', 'March': 'March', 'April': 'April',
+        'May': 'May', 'June': 'June', 'July': 'July', 'August': 'Aug.',
+        'September': 'Sept.', 'October': 'Oct.', 'November': 'Nov.', 'December': 'Dec.'
+    };
+    const abbreviatedDays = {
+        'Sunday': 'Sun.', 'Monday': 'Mon.', 'Tuesday': 'Tues.', 'Wednesday': 'Wed.',
+        'Thursday': 'Thurs.', 'Friday': 'Fri.', 'Saturday': 'Sat.'
+    };
 
     // Close button functionality
     closeBtn.addEventListener('click', function () {
@@ -39,11 +52,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Capitalize checkbox functionality
-    capitalizeCheckbox.addEventListener('change', function () {
-        saveCapitalizePreference(capitalizeCheckbox.checked);
-
-        // Re-process the current input if there is one
+    // Re-process helper for checkbox changes
+    function reprocessCurrentInput() {
         const inputValue = dateInput.value.trim();
         if (inputValue) {
             try {
@@ -55,6 +65,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Ignore errors during re-processing
             }
         }
+    }
+
+    // Capitalize checkbox functionality
+    capitalizeCheckbox.addEventListener('change', function () {
+        saveOptionPreferences();
+        reprocessCurrentInput();
+    });
+
+    // Abbreviate days checkbox
+    abbrDaysCheckbox.addEventListener('change', function () {
+        saveOptionPreferences();
+        reprocessCurrentInput();
+    });
+
+    // Abbreviate months checkbox
+    abbrMonthsCheckbox.addEventListener('change', function () {
+        saveOptionPreferences();
+        reprocessCurrentInput();
     });
 
     // Date input event listener
@@ -209,30 +237,39 @@ document.addEventListener('DOMContentLoaded', function () {
         const month = date.getMonth() + 1; // getMonth() returns 0-11, so add 1
         const day = date.getDate();
 
-        // Check if capitalization is enabled
+        // Check option states
         const shouldCapitalize = capitalizeCheckbox.checked;
+        const shouldAbbrDays = abbrDaysCheckbox.checked;
+        const shouldAbbrMonths = abbrMonthsCheckbox.checked;
 
-        // Format Month Day Year: January 22, 2026
         const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
             'July', 'August', 'September', 'October', 'November', 'December'];
-        let monthName = monthNames[date.getMonth()];
-        if (shouldCapitalize) {
-            monthName = monthName.toUpperCase();
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        // Helper to apply abbreviation and capitalization to month names
+        function formatMonth(idx) {
+            let name = monthNames[idx];
+            if (shouldAbbrMonths) name = abbreviatedMonths[name];
+            if (shouldCapitalize) name = name.toUpperCase();
+            return name;
         }
-        const monthDayYear = `${monthName} ${day}, ${year}`;
+
+        // Helper to apply abbreviation and capitalization to day names
+        function formatDay(idx) {
+            let name = dayNames[idx];
+            if (shouldAbbrDays) name = abbreviatedDays[name];
+            if (shouldCapitalize) name = name.toUpperCase();
+            return name;
+        }
+
+        // Format Month Day Year: January 22, 2026
+        const monthDayYear = `${formatMonth(date.getMonth())} ${day}, ${year}`;
 
         // Format Simple Date: Month/Day
         const simpleDate = `${month}/${day}`;
 
         // Format Humanize Date: Day of Week, Month Day, Year
-        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        let dayOfWeek = dayNames[date.getDay()];
-        let humanizeMonthName = monthNames[date.getMonth()];
-        if (shouldCapitalize) {
-            dayOfWeek = dayOfWeek.toUpperCase();
-            humanizeMonthName = humanizeMonthName.toUpperCase();
-        }
-        const humanizeDate = `${dayOfWeek}, ${humanizeMonthName} ${day}, ${year}`;
+        const humanizeDate = `${formatDay(date.getDay())}, ${formatMonth(date.getMonth())} ${day}, ${year}`;
 
         // Format Dash Date: M-D-YYYY
         const dashDate = `${month}-${day}-${year}`;
@@ -243,11 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const paddedDashDate = `${paddedMonth}-${paddedDay}-${year}`;
 
         // Format Month Day: March 4
-        let monthDayName = monthNames[date.getMonth()];
-        if (shouldCapitalize) {
-            monthDayName = monthDayName.toUpperCase();
-        }
-        const monthDay = `${monthDayName} ${day}`;
+        const monthDay = `${formatMonth(date.getMonth())} ${day}`;
 
         return {
             monthDayYear: monthDayYear,
@@ -354,15 +387,25 @@ document.addEventListener('DOMContentLoaded', function () {
         chrome.storage.local.set({ 'lastDate': dateString });
     }
 
-    function saveCapitalizePreference(isCapitalized) {
-        chrome.storage.local.set({ 'capitalizeEnabled': isCapitalized });
+    function saveOptionPreferences() {
+        chrome.storage.local.set({
+            'capitalizeEnabled': capitalizeCheckbox.checked,
+            'abbrDaysEnabled': abbrDaysCheckbox.checked,
+            'abbrMonthsEnabled': abbrMonthsCheckbox.checked
+        });
     }
 
     function loadLastDate() {
-        chrome.storage.local.get(['lastDate', 'capitalizeEnabled'], function (result) {
-            // First load the capitalize preference
+        chrome.storage.local.get(['lastDate', 'capitalizeEnabled', 'abbrDaysEnabled', 'abbrMonthsEnabled'], function (result) {
+            // Load all option preferences
             if (result.capitalizeEnabled !== undefined) {
                 capitalizeCheckbox.checked = result.capitalizeEnabled;
+            }
+            if (result.abbrDaysEnabled !== undefined) {
+                abbrDaysCheckbox.checked = result.abbrDaysEnabled;
+            }
+            if (result.abbrMonthsEnabled !== undefined) {
+                abbrMonthsCheckbox.checked = result.abbrMonthsEnabled;
             }
 
             // Then load and process the date (if any)
@@ -375,14 +418,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     cancelable: true,
                 });
                 dateInput.dispatchEvent(event);
-            }
-        });
-    }
-
-    function loadCapitalizePreference() {
-        chrome.storage.local.get(['capitalizeEnabled'], function (result) {
-            if (result.capitalizeEnabled !== undefined) {
-                capitalizeCheckbox.checked = result.capitalizeEnabled;
             }
         });
     }
